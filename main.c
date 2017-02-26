@@ -9,7 +9,7 @@ bool imgSetup=false;
 bool imgCancel=false;
 bool imgValidate=false;
 bool flightMode = false;
-bool sleepMode = false;
+bool sleepMode = false;;
 
 #include "header.h"
 #include "uart.h"
