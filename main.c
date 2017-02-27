@@ -118,12 +118,20 @@ void main() {
         //CheckSW2();
         OnOff();
         
-        if(ADXL_INT2 == 1 && alarmOn){
-            RaiseAlarm();
-        }
+//        if(ADXL_INT2 == 1 && alarmOn){
+//            RaiseAlarm();
+//        }
     }
 }
 
+void interrupt inter(void) // Interrupt function definition
+{
+    if(IOCCF1)
+    {
+        Bip(1,100);
+        //IOCCF1=0; Try this to see if interruption are generated after first bip
+    }
+}
 //--------------MAIN METHODS LIBRARY------------------ 
 void ResetScreenTimer(){
     screenTimer=400;
