@@ -126,9 +126,19 @@ void main() {
 
 void interrupt inter(void) // Interrupt function definition
 {
+    if(TMR0IF)
+    {
+        ShowMessage("TIMER", 3);
+        __delay_ms(500);
+        ShowMessage("@@@@@", 3);
+        TMR0IF = 0;
+    }
+    
     if(IOCCF1)
     {
-        Bip(1,100);
+        ShowMessage("ADXL", 3);
+         __delay_ms(500);
+        ShowMessage("@@@@@", 3);
         //IOCCF1=0; Try this to see if interruption are generated after first bip
     }
 }
