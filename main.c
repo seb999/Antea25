@@ -59,7 +59,7 @@ void main() {
      __delay_sec(4); //if delay trop long ca crash, why ???
     Deactivate_Scroll();
     Oled_FillScreen(0x00);
-    SWDTEN = 1;
+    SWDTEN = 0;
     
     //------Check network------------
     while(1){
@@ -99,6 +99,7 @@ void main() {
 //}
         
     //------Life start here------------ 
+    GIE = 1;
     while(1){ 
         CLRWDT(); 
         
@@ -106,13 +107,28 @@ void main() {
         {
             timer++;
             if(timer==61){ //every second
+                ShowMessage("INTER@@", 3);
+                __delay_ms(300);
+                ShowMessage("@@@@@@@", 3); 
+                if(!sleepMode){
+                    CheckBattery();
+                    if(!flightMode) CheckNetwork();
+                }
                 timer=0;
-                CheckBattery();
-                if(!flightMode) CheckNetwork();
+                screenTimer--;
             }
             TMR0IF = 0;
         }
-
+        
+        if(IOCCF1)
+        {
+            ShowMessage("ACCEL@@", 3);
+             __delay_ms(300);
+             if(!sleepMode)ResetScreenTimer();
+             //ShowMessage("@@@@@", 3);
+            IOCCF1=0; 
+        }
+        
         if(!sleepMode){
 //            if(screenTimer%2==0){
 //                CheckBattery();
@@ -164,13 +180,13 @@ void main() {
 //}
 //--------------MAIN METHODS LIBRARY------------------ 
 void ResetScreenTimer(){
-    screenTimer=400;
+    screenTimer=20;
 }
 
 void OnOff(){
-    if(ADXL_INT2 == 1 && !sleepMode){
-        ResetScreenTimer();
-    };
+//    if(ADXL_INT2 == 1 && !sleepMode){
+//        ResetScreenTimer();
+//    };
     
     if(screenTimer==1){
         ScreenOff();
@@ -178,7 +194,7 @@ void OnOff(){
         //RfidOff();
         GsmOff();
     }
-    if(screenTimer>=1)screenTimer--;
+    //if(screenTimer>=1)screenTimer--;
 }
 
 void CheckSW1(){
