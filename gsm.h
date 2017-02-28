@@ -1,8 +1,6 @@
 #ifndef GSM_H
 #define	GSM_H
 #include "oled.h"
-#include "misc.h"
-#include <string.h>
 
 char result3[67]; 
 int simOk;

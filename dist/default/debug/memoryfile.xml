@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/default/debug\Antea25.debug.hex">
+    <memory name="program">
+      <units>words</units>
+      <length>8192</length>
+      <used>1948</used>
+      <free>6244</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>1024</length>
+      <used>132</used>
+      <free>892</free>
+    </memory>
+  </executable>
+</project>

@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdint.h>
 
+int timer = 0;
 int screenTimer;
 bool alarmOn = false;
 bool imgSetup=false;
@@ -12,6 +15,7 @@ bool flightMode = false;
 bool sleepMode = false;
 
 #include "header.h"
+#include "misc.h"
 #include "uart.h"
 #include "spi.h"
 #include "gsm.h"
@@ -33,13 +37,14 @@ void main() {
     SWDTEN = 1;
     OSC_Init();
     PIN_Init();
+    INTER_Init();
     UART_Init();
     SPI_Init();   
     Oled_Init();
     ADLX_Init(); 
     //RFID_Init(); 
     CLRWDT(); 
-     
+    
     SendUartCmd("AT\n");
     __delay_sec(1);
     GsmOn();
@@ -95,12 +100,24 @@ void main() {
         
     //------Life start here------------ 
     while(1){ 
-        CLRWDT();  
-        if(!sleepMode){
-            if(screenTimer%2==0){
+        CLRWDT(); 
+        
+        if(TMR0IF)
+        {
+            timer++;
+            if(timer==61){ //every second
+                timer=0;
                 CheckBattery();
                 if(!flightMode) CheckNetwork();
             }
+            TMR0IF = 0;
+        }
+
+        if(!sleepMode){
+//            if(screenTimer%2==0){
+//                CheckBattery();
+//                if(!flightMode) CheckNetwork();
+//            }
             
             //if(RFID_Ok()){
             if(SW2==0){
@@ -115,33 +132,36 @@ void main() {
         }
         
         CheckSW1();
-        //CheckSW2();
+        CheckSW2();
         OnOff();
         
-//        if(ADXL_INT2 == 1 && alarmOn){
-//            RaiseAlarm();
-//        }
+        if(ADXL_INT2 == 1 && alarmOn){
+            RaiseAlarm();
+        }
     }
 }
 
-void interrupt inter(void) // Interrupt function definition
-{
-    if(TMR0IF)
-    {
-        ShowMessage("TIMER", 3);
-        __delay_ms(500);
-        ShowMessage("@@@@@", 3);
-        TMR0IF = 0;
-    }
-    
-    if(IOCCF1)
-    {
-        ShowMessage("ADXL", 3);
-         __delay_ms(500);
-        ShowMessage("@@@@@", 3);
-        //IOCCF1=0; Try this to see if interruption are generated after first bip
-    }
-}
+//void interrupt inter(void) // Interrupt function definition
+//{
+//    if(TMR0IF)
+//    {
+//        timer++;
+//        if(timer==31){ //every second
+//            timer=0;
+//            CheckBattery();
+//            if(!flightMode) CheckNetwork();
+//        }
+//        TMR0IF = 0;
+//    }
+//    
+//    if(IOCCF1)
+//    {
+//        ShowMessage("PIN@@", 3);
+//         __delay_ms(500);
+//         ShowMessage("@@@@@", 3);
+//        IOCCF1=0; 
+//    }
+//}
 //--------------MAIN METHODS LIBRARY------------------ 
 void ResetScreenTimer(){
     screenTimer=400;

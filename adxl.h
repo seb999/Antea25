@@ -1,10 +1,6 @@
 #ifndef ADXL_H
 #define	ADXL_H
 
-#include<pic16f1709.h>
-#include <htc.h>
-#include "Header.h"
-
 // ACC Registers
 #define ADXL_RESET 0x1f
 #define ADXL_INTMAP2 0x2b

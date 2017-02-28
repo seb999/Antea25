@@ -1,0 +1,447 @@
+[p LITE_MODE AUTOSTATIC PIC14 PIC14E ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F1709 ]
+[d frameptr 6 ]
+"21 C:\Users\sdubos\MPLABXProjects\Antea25\adxl.h
+[v _ACC_ReadReg ACC_ReadReg `(uc  1 e 1 0 ]
+"34
+[v _ACC_WriteReg ACC_WriteReg `(v  1 e 1 0 ]
+"5 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\atoi.c
+[v _atoi atoi `(i  1 e 2 0 ]
+"6 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
+"492 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\doprnt.c
+[v _sprintf sprintf `(i  1 e 2 0 ]
+"62 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\float.c
+[v ___ftpack __ftpack `(f  1 e 3 0 ]
+"86 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\ftadd.c
+[v ___ftadd __ftadd `(f  1 e 3 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\isdigit.c
+[v _isdigit isdigit `(b  1 e 0 0 ]
+"6 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\lwdiv.c
+[v ___lwdiv __lwdiv `(ui  1 e 2 0 ]
+"6 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\lwmod.c
+[v ___lwmod __lwmod `(ui  1 e 2 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strcat.c
+[v _strcat strcat `(*.4uc  1 e 1 0 ]
+"4 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strchr.c
+[v _strchr strchr `(*.25uc  1 e 1 0 ]
+"33 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strcmp.c
+[v _strcmp strcmp `(i  1 e 2 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strcpy.c
+[v _strcpy strcpy `(*.4uc  1 e 1 0 ]
+"4 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strcspn.c
+[v _strcspn strcspn `(ui  1 e 2 0 ]
+"4 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strlen.c
+[v _strlen strlen `(ui  1 e 2 0 ]
+"4 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strspn.c
+[v _strspn strspn `(ui  1 e 2 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\strtok.c
+[v _strtok strtok `(*.4uc  1 e 1 0 ]
+"15 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\Umul16.c
+[v ___wmul __wmul `(ui  1 e 2 0 ]
+"41 C:\Users\sdubos\MPLABXProjects\Antea25\gsm.h
+[v _GsmOff GsmOff `(v  1 e 1 0 ]
+"50
+[v _GsmWakeUp GsmWakeUp `(v  1 e 1 0 ]
+"54
+[v _GsmOn GsmOn `(v  1 e 1 0 ]
+"79
+[v _CheckNetwork CheckNetwork `(uc  1 e 1 0 ]
+"103
+[v _ReadLastSMS ReadLastSMS `(*.26uc  1 e 1 0 ]
+"125
+[v _SavePhoneNumber SavePhoneNumber `(v  1 e 1 0 ]
+"153
+[v _SendSms SendSms `(v  1 e 1 0 ]
+"166
+[v _ShowBattIcon ShowBattIcon `(v  1 e 1 0 ]
+"172
+[v _ShowBattLoad ShowBattLoad `(v  1 e 1 0 ]
+"178
+[v _ShowReceptionIcon ShowReceptionIcon `(v  1 e 1 0 ]
+"183
+[v _ShowMessage ShowMessage `(v  1 e 1 0 ]
+"188
+[v _ShowNumber ShowNumber `(v  1 e 1 0 ]
+"193
+[v _ShowFlightIcon ShowFlightIcon `(v  1 e 1 0 ]
+"198
+[v _ShowIcon ShowIcon `(v  1 e 1 0 ]
+"32 C:\Users\sdubos\MPLABXProjects\Antea25\main.c
+[v _main main `(v  1 e 1 0 ]
+"163
+[v _ResetScreenTimer ResetScreenTimer `(v  1 e 1 0 ]
+"239
+[v _SettingMenu SettingMenu `(v  1 e 1 0 ]
+"274
+[v _Reset Reset `(v  1 e 1 0 ]
+"282
+[v _SetAlarmOff SetAlarmOff `(v  1 e 1 0 ]
+"10 C:\Users\sdubos\MPLABXProjects\Antea25\misc.h
+[v ___delay_sec __delay_sec `(v  1 e 1 0 ]
+"14
+[v _Bip Bip `(v  1 e 1 0 ]
+"27
+[v _OSC_Init OSC_Init `(v  1 e 1 0 ]
+"38
+[v _PIN_Init PIN_Init `(v  1 e 1 0 ]
+"75
+[v _INTER_Init INTER_Init `(v  1 e 1 0 ]
+"26 C:\Users\sdubos\MPLABXProjects\Antea25\oled.h
+[v _Oled_WriteCmd Oled_WriteCmd `(v  1 e 1 0 ]
+"33
+[v _Oled_WriteRam Oled_WriteRam `(v  1 e 1 0 ]
+"43
+[v _Oled_Reset Oled_Reset `(v  1 e 1 0 ]
+"55
+[v _Oled_SetPointer Oled_SetPointer `(v  1 e 1 0 ]
+"71
+[v _Oled_FillScreen Oled_FillScreen `(v  1 e 1 0 ]
+"115
+[v _ScreenOn ScreenOn `(v  1 e 1 0 ]
+"119
+[v _ScreenOff ScreenOff `(v  1 e 1 0 ]
+"134
+[v _Oled_SetFont Oled_SetFont `(v  1 e 1 0 ]
+"148
+[v _Oled_WriteChar Oled_WriteChar `(v  1 e 1 0 ]
+"177
+[v _Oled_ConstText Oled_ConstText `(v  1 e 1 0 ]
+"191
+[v _Deactivate_Scroll Deactivate_Scroll `(v  1 e 1 0 ]
+"195
+[v _Activate_Scroll Activate_Scroll `(v  1 e 1 0 ]
+"199
+[v _Left_HorizontalScroll Left_HorizontalScroll `(v  1 e 1 0 ]
+"73 C:\Users\sdubos\MPLABXProjects\Antea25\rc522.h
+[v _MFRC522_Wr MFRC522_Wr `(v  1 s 1 MFRC522_Wr ]
+"81
+[v _MFRC522_Rd MFRC522_Rd `(uc  1 s 1 MFRC522_Rd ]
+"92
+[v _MFRC522_Clear_Bit MFRC522_Clear_Bit `(v  1 s 1 MFRC522_Clear_Bit ]
+"96
+[v _MFRC522_Set_Bit MFRC522_Set_Bit `(v  1 s 1 MFRC522_Set_Bit ]
+"100
+[v _MFRC522_Reset MFRC522_Reset `(v  1 e 1 0 ]
+"134
+[v _MFRC522_ToCard MFRC522_ToCard `(uc  1 e 1 0 ]
+"237
+[v _MFRC522_Request MFRC522_Request `(uc  1 e 1 0 ]
+"250
+[v _MFRC522_CRC MFRC522_CRC `(v  1 e 1 0 ]
+"402
+[v _MFRC522_AntiColl MFRC522_AntiColl `(uc  1 e 1 0 ]
+"432
+[v _MFRC522_isCard MFRC522_isCard `(uc  1 e 1 0 ]
+"444
+[v _MFRC522_ReadCardSerial MFRC522_ReadCardSerial `(uc  1 e 1 0 ]
+"460
+[v _RFID_Ok RFID_Ok `(uc  1 e 1 0 ]
+"20 C:\Users\sdubos\MPLABXProjects\Antea25\spi.h
+[v _SPI_Write SPI_Write `(uc  1 e 1 0 ]
+"24 C:\Users\sdubos\MPLABXProjects\Antea25\uart.h
+[v _UART_Write UART_Write `(v  1 e 1 0 ]
+"30
+[v _UART_Write_Text UART_Write_Text `(v  1 e 1 0 ]
+"36
+[v _SendUartCmd SendUartCmd `(v  1 e 1 0 ]
+"45
+[v _UART_Read UART_Read `(uc  1 e 1 0 ]
+"56
+[v _UART_Read_Text UART_Read_Text `(v  1 e 1 0 ]
+[s S127 . 1 `uc 1 RA0 1 0 :1:0 
+`uc 1 RA1 1 0 :1:1 
+`uc 1 RA2 1 0 :1:2 
+`uc 1 RA3 1 0 :1:3 
+`uc 1 RA4 1 0 :1:4 
+`uc 1 RA5 1 0 :1:5 
+]
+"429 C:\Program Files (x86)\Microchip\xc8\v1.38\include\pic16f1709.h
+[u S134 . 1 `S127 1 . 1 0 ]
+[v _PORTAbits PORTAbits `VES134  1 e 1 @12 ]
+[s S355 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 RB4 1 0 :1:4 
+`uc 1 RB5 1 0 :1:5 
+`uc 1 RB6 1 0 :1:6 
+`uc 1 RB7 1 0 :1:7 
+]
+"477
+[u S361 . 1 `S355 1 . 1 0 ]
+[v _PORTBbits PORTBbits `VES361  1 e 1 @13 ]
+[s S144 . 1 `uc 1 RC0 1 0 :1:0 
+`uc 1 RC1 1 0 :1:1 
+`uc 1 RC2 1 0 :1:2 
+`uc 1 RC3 1 0 :1:3 
+`uc 1 RC4 1 0 :1:4 
+`uc 1 RC5 1 0 :1:5 
+`uc 1 RC6 1 0 :1:6 
+`uc 1 RC7 1 0 :1:7 
+]
+"518
+[u S153 . 1 `S144 1 . 1 0 ]
+[v _PORTCbits PORTCbits `VES153  1 e 1 @14 ]
+[s S24 . 1 `uc 1 TMR1IF 1 0 :1:0 
+`uc 1 TMR2IF 1 0 :1:1 
+`uc 1 CCP1IF 1 0 :1:2 
+`uc 1 SSP1IF 1 0 :1:3 
+`uc 1 TXIF 1 0 :1:4 
+`uc 1 RCIF 1 0 :1:5 
+`uc 1 ADIF 1 0 :1:6 
+`uc 1 TMR1GIF 1 0 :1:7 
+]
+"583
+[s S33 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 CCPIF 1 0 :1:2 
+]
+[u S36 . 1 `S24 1 . 1 0 `S33 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES36  1 e 1 @17 ]
+"732
+[v _TMR0 TMR0 `VEuc  1 e 1 @21 ]
+"1043
+[v _TRISA TRISA `VEuc  1 e 1 @140 ]
+"1087
+[v _TRISB TRISB `VEuc  1 e 1 @141 ]
+"1125
+[v _TRISC TRISC `VEuc  1 e 1 @142 ]
+[s S187 . 1 `uc 1 PS 1 0 :3:0 
+`uc 1 PSA 1 0 :1:3 
+`uc 1 TMR0SE 1 0 :1:4 
+`uc 1 TMR0CS 1 0 :1:5 
+`uc 1 INTEDG 1 0 :1:6 
+`uc 1 nWPUEN 1 0 :1:7 
+]
+"1379
+[s S194 . 1 `uc 1 PS0 1 0 :1:0 
+`uc 1 PS1 1 0 :1:1 
+`uc 1 PS2 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 T0SE 1 0 :1:4 
+`uc 1 T0CS 1 0 :1:5 
+]
+[u S201 . 1 `S187 1 . 1 0 `S194 1 . 1 0 ]
+[v _OPTION_REGbits OPTION_REGbits `VES201  1 e 1 @149 ]
+"1494
+[v _WDTCON WDTCON `VEuc  1 e 1 @151 ]
+"1552
+[v _OSCTUNE OSCTUNE `VEuc  1 e 1 @152 ]
+"1609
+[v _OSCCON OSCCON `VEuc  1 e 1 @153 ]
+"1680
+[v _OSCSTAT OSCSTAT `VEuc  1 e 1 @154 ]
+"1963
+[v _LATA LATA `VEuc  1 e 1 @268 ]
+"2007
+[v _LATB LATB `VEuc  1 e 1 @269 ]
+"2045
+[v _LATC LATC `VEuc  1 e 1 @270 ]
+"2773
+[v _ANSELA ANSELA `VEuc  1 e 1 @396 ]
+"2817
+[v _ANSELB ANSELB `VEuc  1 e 1 @397 ]
+"2843
+[v _ANSELC ANSELC `VEuc  1 e 1 @398 ]
+"3075
+[v _RC1REG RC1REG `VEuc  1 e 1 @409 ]
+"3128
+[v _TX1REG TX1REG `VEuc  1 e 1 @410 ]
+"3187
+[v _SP1BRGL SP1BRGL `VEuc  1 e 1 @411 ]
+"3256
+[v _SP1BRGH SP1BRGH `VEuc  1 e 1 @412 ]
+"3309
+[v _RC1STA RC1STA `VEuc  1 e 1 @413 ]
+[s S54 . 1 `uc 1 RX9D 1 0 :1:0 
+`uc 1 OERR 1 0 :1:1 
+`uc 1 FERR 1 0 :1:2 
+`uc 1 ADDEN 1 0 :1:3 
+`uc 1 CREN 1 0 :1:4 
+`uc 1 SREN 1 0 :1:5 
+`uc 1 RX9 1 0 :1:6 
+`uc 1 SPEN 1 0 :1:7 
+]
+"3335
+[u S63 . 1 `S54 1 . 1 0 ]
+[v _RC1STAbits RC1STAbits `VES63  1 e 1 @413 ]
+"3488
+[v _TX1STA TX1STA `VEuc  1 e 1 @414 ]
+"3667
+[v _BAUD1CON BAUD1CON `VEuc  1 e 1 @415 ]
+"3912
+[v _WPUA WPUA `VEuc  1 e 1 @524 ]
+"3961
+[v _WPUB WPUB `VEuc  1 e 1 @525 ]
+"3999
+[v _WPUC WPUC `VEuc  1 e 1 @526 ]
+"4065
+[v _SSPBUF SSPBUF `VEuc  1 e 1 @529 ]
+"4313
+[v _SSP1ADD SSP1ADD `VEuc  1 e 1 @530 ]
+"4819
+[v _SSP1STAT SSP1STAT `VEuc  1 e 1 @532 ]
+[s S106 . 1 `uc 1 BF 1 0 :1:0 
+`uc 1 UA 1 0 :1:1 
+`uc 1 R_nW 1 0 :1:2 
+`uc 1 S 1 0 :1:3 
+`uc 1 P 1 0 :1:4 
+`uc 1 D_nA 1 0 :1:5 
+`uc 1 CKE 1 0 :1:6 
+`uc 1 SMP 1 0 :1:7 
+]
+"4841
+[u S115 . 1 `S106 1 . 1 0 ]
+[v _SSP1STATbits SSP1STATbits `VES115  1 e 1 @532 ]
+"4940
+[v _SSP1CON1 SSP1CON1 `VEuc  1 e 1 @533 ]
+[s S79 . 1 `uc 1 SSPM 1 0 :4:0 
+`uc 1 CKP 1 0 :1:4 
+`uc 1 SSPEN 1 0 :1:5 
+`uc 1 SSPOV 1 0 :1:6 
+`uc 1 WCOL 1 0 :1:7 
+]
+"4973
+[s S85 . 1 `uc 1 SSPM0 1 0 :1:0 
+`uc 1 SSPM1 1 0 :1:1 
+`uc 1 SSPM2 1 0 :1:2 
+`uc 1 SSPM3 1 0 :1:3 
+]
+[u S90 . 1 `S79 1 . 1 0 `S85 1 . 1 0 ]
+[v _SSP1CON1bits SSP1CON1bits `VES90  1 e 1 @533 ]
+"8319
+[v _PPSLOCK PPSLOCK `VEuc  1 e 1 @3599 ]
+[s S221 . 1 `uc 1 PPSLOCKED 1 0 :1:0 
+]
+"8329
+[u S223 . 1 `S221 1 . 1 0 ]
+[v _PPSLOCKbits PPSLOCKbits `VES223  1 e 1 @3599 ]
+[s S256 . 1 `uc 1 SSPCLKPPS 1 0 :5:0 
+]
+"8481
+[u S258 . 1 `S256 1 . 1 0 ]
+[v _SSPCLKPPSbits SSPCLKPPSbits `VES258  1 e 1 @3616 ]
+[s S228 . 1 `uc 1 SSPDATPPS 1 0 :5:0 
+]
+"8500
+[u S230 . 1 `S228 1 . 1 0 ]
+[v _SSPDATPPSbits SSPDATPPSbits `VES230  1 e 1 @3617 ]
+[s S235 . 1 `uc 1 RXPPS 1 0 :5:0 
+]
+"8538
+[u S237 . 1 `S235 1 . 1 0 ]
+[v _RXPPSbits RXPPSbits `VES237  1 e 1 @3620 ]
+[s S242 . 1 `uc 1 RB5PPS 1 0 :5:0 
+]
+"8766
+[u S244 . 1 `S242 1 . 1 0 ]
+[v _RB5PPSbits RB5PPSbits `VES244  1 e 1 @3741 ]
+[s S249 . 1 `uc 1 RC3PPS 1 0 :5:0 
+]
+"8880
+[u S251 . 1 `S249 1 . 1 0 ]
+[v _RC3PPSbits RC3PPSbits `VES251  1 e 1 @3747 ]
+[s S263 . 1 `uc 1 RC6PPS 1 0 :5:0 
+]
+"8937
+[u S265 . 1 `S263 1 . 1 0 ]
+[v _RC6PPSbits RC6PPSbits `VES265  1 e 1 @3750 ]
+"12550
+[v _CKP CKP `VEb  1 e 0 @4268 ]
+"12846
+[v _GIE GIE `VEb  1 e 0 @95 ]
+"12978
+[v _IOCCN1 IOCCN1 `VEb  1 e 0 @7361 ]
+"13008
+[v _IOCIE IOCIE `VEb  1 e 0 @91 ]
+"13550
+[v _PS0 PS0 `VEb  1 e 0 @1192 ]
+"13552
+[v _PS1 PS1 `VEb  1 e 0 @1193 ]
+"13554
+[v _PS2 PS2 `VEb  1 e 0 @1194 ]
+"13556
+[v _PSA PSA `VEb  1 e 0 @1195 ]
+"13652
+[v _RCIF RCIF `VEb  1 e 0 @141 ]
+"13794
+[v _SWDTEN SWDTEN `VEb  1 e 0 @1208 ]
+"13862
+[v _TMR0CS TMR0CS `VEb  1 e 0 @1197 ]
+"13864
+[v _TMR0IE TMR0IE `VEb  1 e 0 @93 ]
+"13866
+[v _TMR0IF TMR0IF `VEb  1 e 0 @90 ]
+"13868
+[v _TMR0SE TMR0SE `VEb  1 e 0 @1196 ]
+"354 C:\Program Files (x86)\Microchip\xc8\v1.38\sources\common\doprnt.c
+[v _dpowers dpowers `DCC[5]ui  1 s 10 dpowers ]
+"362
+[v _hexpowers hexpowers `DCC[4]ui  1 s 8 hexpowers ]
+"4 C:\Users\sdubos\MPLABXProjects\Antea25\font.h
+[v _Icon16x16 Icon16x16 `DCC[224]uc  1 e 224 0 ]
+"14
+[v _Battery8x21 Battery8x21 `DCC[126]uc  1 e 126 0 ]
+"23
+[v _FlightMode8x12 FlightMode8x12 `DCC[32]uc  1 e 32 0 ]
+"27
+[v _Reception8x8 Reception8x8 `DCC[16]uc  1 e 16 0 ]
+"32
+[v _Battery6x8 Battery6x8 `DCC[66]uc  1 e 66 0 ]
+"46
+[v _Numeric12x16 Numeric12x16 `DCC[264]uc  1 e 264 0 ]
+"60
+[v _Terminal12x16 Terminal12x16 `DCC[672]uc  1 e 672 0 ]
+"7 C:\Users\sdubos\MPLABXProjects\Antea25\gsm.h
+[v _result3 result3 `[67]uc  1 e 67 0 ]
+"6 C:\Users\sdubos\MPLABXProjects\Antea25\main.c
+[v _timer timer `i  1 e 2 0 ]
+"7
+[v _screenTimer screenTimer `i  1 e 2 0 ]
+"8
+[v _alarmOn alarmOn `uc  1 e 1 0 ]
+"9
+[v _imgSetup imgSetup `uc  1 e 1 0 ]
+"10
+[v _imgCancel imgCancel `uc  1 e 1 0 ]
+"11
+[v _imgValidate imgValidate `uc  1 e 1 0 ]
+"12
+[v _flightMode flightMode `uc  1 e 1 0 ]
+"13
+[v _sleepMode sleepMode `uc  1 e 1 0 ]
+"23 C:\Users\sdubos\MPLABXProjects\Antea25\oled.h
+[v _font font `*.25DCCuc  1 e 2 0 ]
+[v _font2 font2 `*.25DCCuc  1 e 2 0 ]
+"24
+[v _width width `uc  1 e 1 0 ]
+[v _height height `uc  1 e 1 0 ]
+[v _min min `uc  1 e 1 0 ]
+[v _max max `uc  1 e 1 0 ]
+"456 C:\Users\sdubos\MPLABXProjects\Antea25\rc522.h
+[v _buffer buffer `[20]uc  1 e 20 0 ]
+"457
+[v _UID UID `[6]uc  1 e 6 0 ]
+"458
+[v _TagType TagType `ui  1 e 2 0 ]
+"32 C:\Users\sdubos\MPLABXProjects\Antea25\main.c
+[v _main main `(v  1 e 1 0 ]
+{
+"139
+} 0
+"38 C:\Users\sdubos\MPLABXProjects\Antea25\misc.h
+[v _PIN_Init PIN_Init `(v  1 e 1 0 ]
+{
+"57
+[v PIN_Init@state state `uc  1 a 1 0 ]
+"73
+} 0
+"27
+[v _OSC_Init OSC_Init `(v  1 e 1 0 ]
+{
+"36
+} 0
+"75
+[v _INTER_Init INTER_Init `(v  1 e 1 0 ]
+{
+"89
+} 0

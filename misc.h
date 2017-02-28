@@ -9,22 +9,7 @@
 //  delay in second
 void __delay_sec(int n){
     while(n--) __delay_ms(1000); 
-//    for(int i=0;i<n;i++){
-//        __delay_ms(1000);
-   // }
 }
-
-//void Bip(int n, int t){
-//    while(n--){
-//        while(t--){
-//            BUZZER = 1;
-//            __delay_us(130);
-//            BUZZER = 0;
-//            __delay_us(130);
-//        }
-//        __delay_ms(20);
-//    }
-//}
 
 void Bip(int n, int t){
     for(int i=0;i<n;i++){
@@ -85,6 +70,22 @@ void PIN_Init(void) {
     PPSLOCK = 0xAA;
     PPSLOCKbits.PPSLOCKED = 0x01; // lock PPS
     GIE = state;
+}
+
+void INTER_Init(void){
+    TMR0IE = 1; //enable TMR0 overflow interrupts
+    GIE = 1; //enable Global interrup   
+    TMR0CS=0; //Internal instruction cycle clock  
+    TMR0SE=0;
+    PSA=0; 
+    PS0=1; 
+    PS1=1; 
+    PS2=1; 
+    TMR0 = 0; //clear timer
+    
+    //Activate Pin interruption
+    IOCIE = 1;
+    IOCCN1 = 1;
 }
 
 #endif	
