@@ -5,14 +5,12 @@
 #include <string.h>
 #include <stdint.h>
 
-int timer = 0;
-int screenTimer;
+int screenTimer = 40;
 bool alarmOn = false;
 bool imgSetup=false;
 bool imgCancel=false;
 bool imgValidate=false;
 bool flightMode = false;
-bool sleepMode = false;
 
 #include "header.h"
 #include "misc.h"
@@ -25,12 +23,13 @@ bool sleepMode = false;
 void SetAlarmOn();
 void SetAlarmOff();
 void SettingMenu();
-void OnOff();
+void Sleep();
 void CheckSW1();
 void CheckSW2();
 void Reset();
 void RaiseAlarm();
 void ResetScreenTimer();
+void WakeUp();
 
 void main() {
     //------Init Hardware------------
@@ -46,44 +45,45 @@ void main() {
     CLRWDT(); 
     
     SendUartCmd("AT\n");
-    __delay_sec(1);
-    GsmOn();
-    __delay_sec(1);
-    SimCard_Init();
-    
+//    __delay_sec(1);
+//    GsmOn();
+//    __delay_sec(1);
+//    SimCard_Init();
+  
     //------Welcome message------------  
     SWDTEN = 0;
-    ResetScreenTimer();
     ShowMessage("WELCOME", 3);
     Left_HorizontalScroll(3, 4, 4);
      __delay_sec(4); //if delay trop long ca crash, why ???
     Deactivate_Scroll();
     Oled_FillScreen(0x00);
-    SWDTEN = 0;
+    SWDTEN = 1;
     
     //------Check network------------
-    while(1){
-        CLRWDT(); 
-        if(CheckNetwork()){
-            break;  
-        }    
-        __delay_sec(1);
-        ShowMessage("CHECK@NETWORK", 3);
-    }
+//    while(1){         
+//        CLRWDT(); 
+//        if(CheckNetwork()){
+//            break;  
+//        }    
+//        __delay_sec(1);
+//        ShowMessage("CHECK@NETWORK", 3);
+//    }
     
     //------Check User phone------------
-    while(1){
-        CLRWDT(); 
-        CheckSW1();
-        CheckSW2();
-        OnOff();
-        char * phoneNumber = ReadPhoneNumber();
-        if(phoneNumber!=""){
-            Bip(1,100);
-            Reset();
-            break;  
-        }         
-    }
+//    while(1){
+//        CLRWDT(); 
+//        CheckSW1();
+//        CheckSW2();
+//        OnOff();
+//        
+//        char * phoneNumber = ReadPhoneNumber();
+//        Bip(1,100);
+//        if(phoneNumber!=""){
+//            Bip(1,100);
+//            Reset();
+//            break;  
+//        }         
+//    }
 
 //Debug RFID
 //    ShowMessage("RFID@CHECK", 3);
@@ -100,132 +100,108 @@ void main() {
         
     //------Life start here------------ 
     GIE = 1;
+    SetAlarmOff();
+    flightMode = true; //remove when GSM is ok
     while(1){ 
         CLRWDT(); 
         
-        if(TMR0IF)
-        {
-            timer++;
-            if(timer==61){ //every second
-                ShowMessage("INTER@@", 3);
-                __delay_ms(300);
-                ShowMessage("@@@@@@@", 3); 
-                if(!sleepMode){
-                    CheckBattery();
-                    if(!flightMode) CheckNetwork();
-                }
-                timer=0;
-                screenTimer--;
-            }
+        //Timer interruption
+        if(TMR0IF){
+            ShowMessage("INT", 6);
+            __delay_ms(150);
+            ShowMessage("@", 6); 
+            CheckBattery();
+            if(!flightMode) CheckNetwork();
+            Sleep(); 
             TMR0IF = 0;
         }
         
-        if(IOCCF1)
-        {
-            ShowMessage("ACCEL@@", 3);
-             __delay_ms(300);
-             if(!sleepMode)ResetScreenTimer();
-             //ShowMessage("@@@@@", 3);
+        //Accelerometer interruption
+        if(IOCCF1){
+            ShowMessage("ACC@@", 6);
+            __delay_ms(300);
+            ResetScreenTimer();
+            if(alarmOn) RaiseAlarm();
             IOCCF1=0; 
         }
+
+        //SW1 interruption
+        if(IOCBF7){ 
+            CheckSW1();
+            IOCBF7=0; 
+        }
+ 
+        //SW2 interruption
+        if(IOCBF6){ 
+            CheckSW2();
+            IOCBF6=0; 
+        }
         
-        if(!sleepMode){
-//            if(screenTimer%2==0){
-//                CheckBattery();
-//                if(!flightMode) CheckNetwork();
-//            }
-            
+        //if(!sleepMode){
+//            }          
             //if(RFID_Ok()){
-            if(SW2==0){
-                if(flightMode){
-                    GsmOn();
-                }
-                alarmOn = !alarmOn;
-                if(alarmOn)SetAlarmOn();
-                else SetAlarmOff();
-                __delay_ms(300);
-            }
-        }
-        
-        CheckSW1();
-        CheckSW2();
-        OnOff();
-        
-        if(ADXL_INT2 == 1 && alarmOn){
-            RaiseAlarm();
-        }
+//            if(SW2==0){
+//                if(flightMode){
+//                    GsmOn();
+//                }
+//                alarmOn = !alarmOn;
+//                if(alarmOn)SetAlarmOn();
+//                else SetAlarmOff();
+//                __delay_ms(300);
+//            }
+       // }      
     }
 }
-
-//void interrupt inter(void) // Interrupt function definition
-//{
-//    if(TMR0IF)
-//    {
-//        timer++;
-//        if(timer==31){ //every second
-//            timer=0;
-//            CheckBattery();
-//            if(!flightMode) CheckNetwork();
-//        }
-//        TMR0IF = 0;
-//    }
-//    
-//    if(IOCCF1)
-//    {
-//        ShowMessage("PIN@@", 3);
-//         __delay_ms(500);
-//         ShowMessage("@@@@@", 3);
-//        IOCCF1=0; 
-//    }
-//}
 //--------------MAIN METHODS LIBRARY------------------ 
 void ResetScreenTimer(){
-    screenTimer=20;
+    screenTimer=40;
 }
 
-void OnOff(){
-//    if(ADXL_INT2 == 1 && !sleepMode){
-//        ResetScreenTimer();
-//    };
-    
-    if(screenTimer==1){
+void Sleep(){
+    screenTimer--;
+    if(screenTimer==0){
         ScreenOff();
-        sleepMode = true;
-        //RfidOff();
         GsmOff();
+        SWDTEN = 0;
+        TMR0IE = 0;
+        if(!alarmOn){IOCCP1 = 0;};
+        SLEEP();
+        WakeUp();
+        //RfidOff(); 
     }
-    //if(screenTimer>=1)screenTimer--;
+}
+
+void WakeUp(){
+    SWDTEN = 1;
+    if(!alarmOn){
+        TMR0IE = 1;
+        IOCCP1 = 1;
+        ScreenOn();
+        GsmWakeUp();
+        ShowMessage("WELCOME@@", 3);
+        Left_HorizontalScroll(3, 4, 4);
+        __delay_sec (4);
+        Deactivate_Scroll();
+        SetAlarmOff();
+        //__delay_ms(300);
+        //RfidOn();
+        //__delay_ms(300);
+        ShowIcon("1", 112, 6);
+        imgSetup=true;
+    }
 }
 
 void CheckSW1(){
-    if(SW1 == 0){
-        if(!alarmOn && sleepMode){
-            sleepMode = false;
-            ScreenOn();
-            GsmWakeUp();
-            ShowMessage("WELCOME@@", 3);
-            Left_HorizontalScroll(3, 4, 4);
-            __delay_sec (4);
-            Deactivate_Scroll();
-            SetAlarmOff();
-            //__delay_ms(300);
-            //RfidOn();
-            //__delay_ms(300);
-            ShowIcon("1", 112, 6);
-            imgSetup=true;
-        }
-        ResetScreenTimer();
-        imgSetup=!imgSetup;
-        if(imgSetup)
-            ShowIcon("0", 112, 6);
-        else
-            ShowIcon("1", 112, 6);
-        __delay_ms(200);
-     }
+    ResetScreenTimer();
+    imgSetup=!imgSetup;
+    if(imgSetup)
+        ShowIcon("0", 112, 6);
+    else
+        ShowIcon("1", 112, 6);
 }
 
 void CheckSW2(){
-    if(SW2==0 && imgSetup){
+    if(imgSetup){
         ResetScreenTimer();
         ShowMessage("BADGE@@@@", 3);
         ShowMessage("@@@@@@@@", 5);
@@ -241,10 +217,10 @@ void CheckSW2(){
                 __delay_ms(200);
             }
             
-            if(RFID_Ok()) {
-                SettingMenu();
-                break;
-            }
+//            if(RFID_Ok()) {
+//                SettingMenu();
+//                break;
+//            }
             
             if(SW2 == 0 && imgCancel){
                 imgCancel=false;  
@@ -325,7 +301,6 @@ void SetAlarmOn(){
 
 void RaiseAlarm(){
     GsmWakeUp();
-    sleepMode = false;
     ShowMessage("ALERT@@@@@", 3);
     ScreenOn();
     ResetScreenTimer();
