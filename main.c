@@ -45,39 +45,38 @@ void main() {
     CLRWDT(); 
     
     SendUartCmd("AT\n");
-//    __delay_sec(1);
-//    GsmOn();
-//    __delay_sec(1);
-//    SimCard_Init();
+    __delay_sec(1);
+    GsmOn();
+    __delay_sec(1);
+    SimCard_Init();
   
     //------Welcome message------------  
     SWDTEN = 0;
     ShowMessage("WELCOME", 3);
     Left_HorizontalScroll(3, 4, 4);
-     __delay_sec(4); //if delay trop long ca crash, why ???
+     __delay_sec(4); 
     Deactivate_Scroll();
     Oled_FillScreen(0x00);
     SWDTEN = 1;
     
     //------Check network------------
-//    while(1){         
-//        CLRWDT(); 
-//        if(CheckNetwork()){
-//            break;  
-//        }    
-//        __delay_sec(1);
-//        ShowMessage("CHECK@NETWORK", 3);
-//    }
+    while(1){         
+        CLRWDT(); 
+        if(CheckNetwork()){
+            break;  
+        }    
+        __delay_sec(1);
+        ShowMessage("CHECK@NETWORK", 3);
+    }
     
     //------Check User phone------------
-//    while(1){
+//    while(1){ //fix this SW1 is changed!!
 //        CLRWDT(); 
-//        CheckSW1();
-//        CheckSW2();
-//        OnOff();
+//        //CheckSW1();
+//        //CheckSW2();
+//        //Sleep();
 //        
 //        char * phoneNumber = ReadPhoneNumber();
-//        Bip(1,100);
 //        if(phoneNumber!=""){
 //            Bip(1,100);
 //            Reset();
@@ -112,6 +111,14 @@ void main() {
             ShowMessage("@", 6); 
             CheckBattery();
             if(!flightMode) CheckNetwork();
+            //if(RFID_Ok()){
+//                if(flightMode)GsmOn();
+//                alarmOn = !alarmOn;
+//                if(alarmOn)SetAlarmOn();
+//                else SetAlarmOff();
+//                __delay_ms(300);
+//            }
+            
             Sleep(); 
             TMR0IF = 0;
         }
@@ -136,20 +143,6 @@ void main() {
             CheckSW2();
             IOCBF6=0; 
         }
-        
-        //if(!sleepMode){
-//            }          
-            //if(RFID_Ok()){
-//            if(SW2==0){
-//                if(flightMode){
-//                    GsmOn();
-//                }
-//                alarmOn = !alarmOn;
-//                if(alarmOn)SetAlarmOn();
-//                else SetAlarmOff();
-//                __delay_ms(300);
-//            }
-       // }      
     }
 }
 //--------------MAIN METHODS LIBRARY------------------ 
@@ -163,8 +156,8 @@ void Sleep(){
         ScreenOff();
         GsmOff();
         SWDTEN = 0;
-        TMR0IE = 0;
-        if(!alarmOn){IOCCP1 = 0;};
+        TMR0IE = 0; //stop timer interruption
+        if(!alarmOn){IOCCP1 = 0;}; //stop accelerometer interruption
         SLEEP();
         WakeUp();
         //RfidOff(); 
@@ -172,6 +165,7 @@ void Sleep(){
 }
 
 void WakeUp(){
+    ShowMessage("WAKEUP@@", 6);
     SWDTEN = 1;
     if(!alarmOn){
         TMR0IE = 1;
@@ -194,6 +188,7 @@ void WakeUp(){
 void CheckSW1(){
     ResetScreenTimer();
     imgSetup=!imgSetup;
+    __delay_ms (200);
     if(imgSetup)
         ShowIcon("0", 112, 6);
     else
@@ -201,6 +196,12 @@ void CheckSW1(){
 }
 
 void CheckSW2(){
+//    if(flightMode)GsmOn();  Test sim without RFID module HACK
+//    alarmOn = !alarmOn;
+//    if(alarmOn)SetAlarmOn();
+//    else SetAlarmOff();
+//    __delay_ms(300);
+    
     if(imgSetup){
         ResetScreenTimer();
         ShowMessage("BADGE@@@@", 3);
