@@ -16,6 +16,7 @@ bool flightMode = false;
 #include "misc.h"
 #include "uart.h"
 #include "spi.h"
+#include "oled.h"
 #include "gsm.h"
 #include "adxl.h"
 #include "rc522.h"
@@ -40,7 +41,7 @@ void main() {
     UART_Init();
     SPI_Init();   
     Oled_Init();
-    ADLX_Init(); 
+    ACC_Init(); 
     //RFID_Init(); 
     CLRWDT(); 
     
