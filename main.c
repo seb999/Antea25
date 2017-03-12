@@ -7,10 +7,11 @@
 
 int screenTimer = 40;
 bool alarmOn = false;
-bool imgSetup=false;
+bool imgSetup=true;
 bool imgCancel=false;
 bool imgValidate=false;
 bool flightMode = false;
+bool isPhoneNumber = false;
 
 #include "header.h"
 #include "misc.h"
@@ -70,27 +71,17 @@ void main() {
         ShowMessage("CHECK@NETWORK", 3);
     }
     
-    //------Check User phone------------
-//    while(1){ //fix this SW1 is changed!!
-//        CLRWDT(); 
-//        //CheckSW1();
-//        //CheckSW2();
-//        //Sleep();
-//        
-//        char * phoneNumber = ReadPhoneNumber();
-//        if(phoneNumber!=""){
-//            Bip(1,100);
-//            Reset();
-//            break;  
-//        }         
-//    }
+    //------Check User phone------------ Valid this with no phone stored
+    if(ReadPhoneNumber() != ""){
+        isPhoneNumber = true;
+    }
 
 //Debug RFID
 //    ShowMessage("RFID@CHECK", 3);
 //while(1){
 //    CLRWDT(); 
 //    if(RFID_Ok()) {
-//        Bip(1,100);
+//        Bip(1);
 //        ShowMessage("RFID@OK", 3);
 //        __delay_sec(1);
 //        ShowMessage("@@@@@@@", 3);
@@ -101,7 +92,7 @@ void main() {
     //------Life start here------------ 
     GIE = 1;
     SetAlarmOff();
-    flightMode = true; //remove when GSM is ok
+    CheckSW1();
     while(1){ 
         CLRWDT(); 
         
@@ -111,14 +102,20 @@ void main() {
             __delay_ms(150);
             ShowMessage("@", 6); 
             CheckBattery();
-            if(!flightMode) CheckNetwork();
+            if(!flightMode) CheckNetwork(); 
             //if(RFID_Ok()){
-//                if(flightMode)GsmOn();
-//                alarmOn = !alarmOn;
-//                if(alarmOn)SetAlarmOn();
-//                else SetAlarmOff();
-//                __delay_ms(300);
-//            }
+//                if(isPhoneNumber){
+//                    if(flightMode)GsmOn();
+//                    alarmOn = !alarmOn;
+//                    if(alarmOn)SetAlarmOn();
+//                    else SetAlarmOff();
+//                    __delay_ms(300);
+//                }
+//                else {
+//                    ShowMessage("SET@PHONE", 2);
+//                    ShowMessage("NUMBER", 5);
+//                }
+           // }
             
             Sleep(); 
             TMR0IF = 0;
@@ -168,9 +165,9 @@ void Sleep(){
 void WakeUp(){
     ShowMessage("WAKEUP@@", 6);
     SWDTEN = 1;
-    if(!alarmOn){
-        TMR0IE = 1;
-        IOCCP1 = 1;
+    TMR0IE = 1;
+    IOCCP1 = 1;
+    if(!alarmOn){  
         ScreenOn();
         GsmWakeUp();
         ShowMessage("WELCOME@@", 3);
@@ -197,40 +194,46 @@ void CheckSW1(){
 }
 
 void CheckSW2(){
-//    if(flightMode)GsmOn();  Test sim without RFID module HACK
-//    alarmOn = !alarmOn;
-//    if(alarmOn)SetAlarmOn();
-//    else SetAlarmOff();
-//    __delay_ms(300);
+    //Remove with RFID
+    if(flightMode)GsmOn();  
+    alarmOn = !alarmOn;
+    if(alarmOn)SetAlarmOn();
+    else SetAlarmOff();
+    __delay_ms(300);
     
-    if(imgSetup){
-        ResetScreenTimer();
-        ShowMessage("BADGE@@@@", 3);
-        ShowMessage("@@@@@@@@", 5);
-        ShowIcon("4", 112, 6);
-        while(1) {
-            CLRWDT();
-            if(SW1 == 0){
-                imgCancel=!imgCancel;
-                if(!imgCancel)
-                    ShowIcon("4", 112, 6);
-                else 
-                    ShowIcon("5", 112, 6);
-                __delay_ms(200);
-            }
+//    if(imgSetup){
+//        ResetScreenTimer();
+//        ShowMessage("BADGE@@@@", 3);
+//        ShowMessage("@@@@@@@@", 5);
+//        ShowIcon("4", 112, 6);
+//        while(1) {
+//            CLRWDT();
+//            if(SW1 == 0){
+//                imgCancel=!imgCancel;
+//                if(!imgCancel)
+//                    ShowIcon("4", 112, 6);
+//                else 
+//                    ShowIcon("5", 112, 6);
+//                __delay_ms(200);
+//            }
             
-//            if(RFID_Ok()) {
+//            if(RFID_Ok()) {  ADD for RFID
 //                SettingMenu();
 //                break;
 //            }
             
-            if(SW2 == 0 && imgCancel){
-                imgCancel=false;  
-                Reset();
-                break;
-            }   
-        }
-    }
+//            if(SW2 == 0 && imgCancel){
+//                imgCancel=false;  
+//                Reset();
+//                break;
+//            }  
+//            if(SW2 == 0 && !imgCancel){ //remove for RFID
+//                GsmOn();
+//                SettingMenu();
+//                break;
+//            }  
+//        }
+//    }
 }
         
 void SettingMenu(){
@@ -283,22 +286,27 @@ void SetAlarmOff(){
 }
 
 void SetAlarmOn(){
+    SWDTEN = 0;
+    IOCCP1 = 0;
     ResetScreenTimer();
-    for(int i=0;i<=10;i++)
+    for(int i=0;i<=20;i++)
     {
-        CLRWDT();
+        //CLRWDT();
         CheckNetwork();
         //if(RFID_Ok()){
         if(SW2==0 && !imgSetup){
             SetAlarmOff();
             return;
         }
-        sprintf(buffer,"%02d",10-i);
+        sprintf(buffer,"%02d",20-i);
         ShowNumber(buffer, 56, 6);
         __delay_ms(800);
      }
-    Bip(4,100);
+    Bip(4);
     ShowMessage("ALARM@ON@@", 3);
+    SWDTEN = 1;
+    CLRWDT();
+    IOCCP1 = 1;
 }
 
 void RaiseAlarm(){
@@ -309,10 +317,8 @@ void RaiseAlarm(){
     //RfidOn();
     //__delay_ms(500);
     if(flightMode){
-        //GsmWakeUp();
         CLRWDT();
         GsmOn();
-        //__delay_ms(800);
     }
     for(int i=0;i<=10;i++)
     {
