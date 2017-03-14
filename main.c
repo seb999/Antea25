@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 
-int screenTimer = 40;
+int screenTimer = 60;
 bool alarmOn = false;
 bool imgSetup=true;
 bool imgCancel=false;
@@ -103,6 +103,8 @@ void main() {
             ShowMessage("@", 6); 
             CheckBattery();
             if(!flightMode) CheckNetwork(); 
+            Sleep(); 
+            TMR0IF = 0;
             //if(RFID_Ok()){
 //                if(isPhoneNumber){
 //                    if(flightMode)GsmOn();
@@ -116,9 +118,6 @@ void main() {
 //                    ShowMessage("NUMBER", 5);
 //                }
            // }
-            
-            Sleep(); 
-            TMR0IF = 0;
         }
         
         //Accelerometer interruption
@@ -145,7 +144,7 @@ void main() {
 }
 //--------------MAIN METHODS LIBRARY------------------ 
 void ResetScreenTimer(){
-    screenTimer=40;
+    screenTimer=60;
 }
 
 void Sleep(){
@@ -163,13 +162,12 @@ void Sleep(){
 }
 
 void WakeUp(){
-    ShowMessage("WAKEUP@@", 6);
+    GsmWakeUp();
     SWDTEN = 1;
     TMR0IE = 1;
-    IOCCP1 = 1;
     if(!alarmOn){  
+        IOCCP1 = 1;
         ScreenOn();
-        GsmWakeUp();
         ShowMessage("WELCOME@@", 3);
         Left_HorizontalScroll(3, 4, 4);
         __delay_sec (4);
@@ -286,15 +284,16 @@ void SetAlarmOff(){
 }
 
 void SetAlarmOn(){
-    SWDTEN = 0;
     IOCCP1 = 0;
     ResetScreenTimer();
+    __delay_ms(800); //needed to give time for gsm to be stable
     for(int i=0;i<=20;i++)
     {
-        //CLRWDT();
+        CLRWDT();
         CheckNetwork();
         //if(RFID_Ok()){
-        if(SW2==0 && !imgSetup){
+        if(SW2==0){
+            __delay_ms(150);
             SetAlarmOff();
             return;
         }
@@ -310,15 +309,15 @@ void SetAlarmOn(){
 }
 
 void RaiseAlarm(){
-    GsmWakeUp();
+    CLRWDT();
     ShowMessage("ALERT@@@@@", 3);
     ScreenOn();
     ResetScreenTimer();
     //RfidOn();
     //__delay_ms(500);
     if(flightMode){
-        CLRWDT();
         GsmOn();
+        __delay_ms(800);
     }
     for(int i=0;i<=10;i++)
     {
