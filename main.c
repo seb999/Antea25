@@ -46,6 +46,27 @@ void main() {
     //RFID_Init(); 
     CLRWDT(); 
     
+//Debug RFID--------------------
+//    ShowMessage("RFID@CHECK", 3);
+//    while(1){
+//        CLRWDT(); 
+//        if(RFID_Ok()) {
+//            Bip(1);
+//            ShowMessage("RFID@OK", 3);
+//            __delay_sec(1);
+//            ShowMessage("@@@@@@@", 3);
+//            break;
+//        }
+//        if(SW1==0){
+//            RfidOff();
+//            ShowMessage("RFID@OFF", 3);
+//        }
+//        if(SW2==0){
+//            RfidOn();
+//            ShowMessage("RFID@ON", 3);
+//        }
+//    }
+    
     SendUartCmd("AT\n");
     __delay_sec(1);
     GsmOn();
@@ -75,19 +96,6 @@ void main() {
     if(ReadPhoneNumber() != ""){
         isPhoneNumber = true;
     }
-
-//Debug RFID
-//    ShowMessage("RFID@CHECK", 3);
-//while(1){
-//    CLRWDT(); 
-//    if(RFID_Ok()) {
-//        Bip(1);
-//        ShowMessage("RFID@OK", 3);
-//        __delay_sec(1);
-//        ShowMessage("@@@@@@@", 3);
-//        break;
-//    }
-//}
         
     //------Life start here------------ 
     GIE = 1;
@@ -105,19 +113,12 @@ void main() {
             if(!flightMode) CheckNetwork(); 
             Sleep(); 
             TMR0IF = 0;
-            //if(RFID_Ok()){
-//                if(isPhoneNumber){
-//                    if(flightMode)GsmOn();
-//                    alarmOn = !alarmOn;
-//                    if(alarmOn)SetAlarmOn();
-//                    else SetAlarmOff();
-//                    __delay_ms(300);
-//                }
-//                else {
-//                    ShowMessage("SET@PHONE", 2);
-//                    ShowMessage("NUMBER", 5);
-//                }
-           // }
+//            if(RFID_Ok()){
+//                alarmOn = !alarmOn;
+//                if(alarmOn)SetAlarmOn();
+//                else SetAlarmOff();
+//                __delay_ms(150);
+//            }
         }
         
         //Accelerometer interruption
@@ -193,11 +194,11 @@ void CheckSW1(){
 
 void CheckSW2(){
     //Remove with RFID
-    if(flightMode)GsmOn();  
+    //if(flightMode)GsmOn();  moved to SetAlarmOn
     alarmOn = !alarmOn;
     if(alarmOn)SetAlarmOn();
     else SetAlarmOff();
-    __delay_ms(300);
+    __delay_ms(150);
     
 //    if(imgSetup){
 //        ResetScreenTimer();
@@ -284,11 +285,13 @@ void SetAlarmOff(){
 }
 
 void SetAlarmOn(){
-    IOCCP1 = 0;
+    IOCCP1 = 0; //Stop accelerometer interruption
     ResetScreenTimer();
-    __delay_ms(800); //needed to give time for gsm to be stable
-    for(int i=0;i<=20;i++)
-    {
+    if(flightMode){
+        GsmOn();  
+        __delay_ms(800); //needed to give time for gsm to be stable
+    }
+    for(int i=0;i<=20;i++){
         CLRWDT();
         CheckNetwork();
         //if(RFID_Ok()){
@@ -303,8 +306,6 @@ void SetAlarmOn(){
      }
     Bip(4);
     ShowMessage("ALARM@ON@@", 3);
-    SWDTEN = 1;
-    CLRWDT();
     IOCCP1 = 1;
 }
 
@@ -319,21 +320,23 @@ void RaiseAlarm(){
         GsmOn();
         __delay_ms(800);
     }
-    for(int i=0;i<=10;i++)
-    {
+    for(int i=0;i<=10;i++){
         CLRWDT();
         CheckNetwork();
         //if(RFID_Ok()){
         if(SW2==0){
+            __delay_ms(150);
             SetAlarmOff();
-            __delay_ms(300);
             return;
         }
+        sprintf(buffer,"%02d",10-i);
+        ShowNumber(buffer, 56, 6);
         __delay_ms(800);
      }
     //RfidOff();
     SendSms();
     __delay_sec(3);
+    CLRWDT();
     //RfidOn();
     ShowMessage("ALARM@ON@@", 3);
 }
