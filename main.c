@@ -194,7 +194,6 @@ void CheckSW1(){
 
 void CheckSW2(){
     //Remove with RFID
-    //if(flightMode)GsmOn();  moved to SetAlarmOn
     alarmOn = !alarmOn;
     if(alarmOn)SetAlarmOn();
     else SetAlarmOff();
@@ -243,7 +242,8 @@ void SettingMenu(){
     __delay_ms(200);
     while(1){
         CLRWDT();
-        if(SW1 == 0){
+        //if(SW1 == 0){
+        if(IOCBF7){
             imgValidate=!imgValidate;
             if(!imgValidate){
                 ShowIcon("3", 90, 6);
@@ -286,24 +286,29 @@ void SetAlarmOff(){
 
 void SetAlarmOn(){
     IOCCP1 = 0; //Stop accelerometer interruption
+    IOCBF6=0;  //clear SW2 flag otherwise collision
     ResetScreenTimer();
     if(flightMode){
         GsmOn();  
         __delay_ms(800); //needed to give time for gsm to be stable
     }
-    for(int i=0;i<=20;i++){
+    int i = 0;
+    while(i<21){
         CLRWDT();
         CheckNetwork();
-        //if(RFID_Ok()){
-        if(SW2==0){
-            __delay_ms(150);
-            SetAlarmOff();
-            return;
-        }
         sprintf(buffer,"%02d",20-i);
         ShowNumber(buffer, 56, 6);
         __delay_ms(800);
-     }
+        //if(SW1 == 0){
+        if(IOCBF6){
+            __delay_ms(150);
+            SetAlarmOff();
+            IOCBF6=0; 
+            return;
+        }
+        i++;
+    }
+    
     Bip(4);
     ShowMessage("ALARM@ON@@", 3);
     IOCCP1 = 1;
@@ -311,6 +316,7 @@ void SetAlarmOn(){
 
 void RaiseAlarm(){
     CLRWDT();
+    IOCBF6=0; //clear SW2 flag otherwise collision
     ShowMessage("ALERT@@@@@", 3);
     ScreenOn();
     ResetScreenTimer();
@@ -320,19 +326,21 @@ void RaiseAlarm(){
         GsmOn();
         __delay_ms(800);
     }
-    for(int i=0;i<=10;i++){
+    int i = 0;
+    while(i<11){
         CLRWDT();
         CheckNetwork();
-        //if(RFID_Ok()){
-        if(SW2==0){
-            __delay_ms(150);
-            SetAlarmOff();
-            return;
-        }
         sprintf(buffer,"%02d",10-i);
         ShowNumber(buffer, 56, 6);
         __delay_ms(800);
-     }
+        if(IOCBF6){
+            __delay_ms(150);
+            SetAlarmOff();
+            IOCBF6=0; 
+            return;
+        }
+        i++;
+    }
     //RfidOff();
     SendSms();
     __delay_sec(3);
