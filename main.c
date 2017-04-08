@@ -304,6 +304,7 @@ void SetAlarmOn(){
             __delay_ms(150);
             SetAlarmOff();
             IOCBF6=0; 
+            IOCCP1 = 1;
             return;
         }
         i++;
