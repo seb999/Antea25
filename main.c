@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 
-int screenTimer = 60;
+int screenTimer = 70;
 bool alarmOn = false;
 bool imgSetup=true;
 bool imgCancel=false;
@@ -26,6 +26,7 @@ void SetAlarmOn();
 void SetAlarmOff();
 void SettingMenu();
 void Sleep();
+void Sleep2();
 void CheckSW1();
 void CheckSW2();
 void Reset();
@@ -46,35 +47,45 @@ void main() {
     //RFID_Init(); 
     CLRWDT(); 
     
-//Debug RFID--------------------
-//    ShowMessage("RFID@CHECK", 3);
+    
+    //---------Debug RFID--------------------
+//    ShowMessage("RFID@ON@", 3);
+//    GIE = 1;
+//    __delay_ms(100); //time to stabilized interruption
 //    while(1){
 //        CLRWDT(); 
 //        if(RFID_Ok()) {
-//            Bip(1);
-//            ShowMessage("RFID@OK", 3);
-//            __delay_sec(1);
-//            ShowMessage("@@@@@@@", 3);
-//            break;
 //        }
+//
 //        if(SW1==0){
 //            RfidOff();
 //            ShowMessage("RFID@OFF", 3);
 //        }
+//        
 //        if(SW2==0){
 //            RfidOn();
-//            ShowMessage("RFID@ON", 3);
+//            ShowMessage("RFID@ON@", 3);
 //        }
 //    }
-    
+        
+
     SendUartCmd("AT\n");
     __delay_sec(1);
     GsmOn();
     __delay_sec(1);
     SimCard_Init();
+    
+    //---------GPS-------------
+//    SWDTEN = 0;
+//    ShowMessage("GPS@TEST", 3);
+//    //GIE = 1;
+//    __delay_ms(100); //time to stabilized interruption
+//    while(1){
+//        
+//    }
   
     //------Welcome message------------  
-    SWDTEN = 0;
+    
     ShowMessage("WELCOME", 3);
     Left_HorizontalScroll(3, 4, 4);
      __delay_sec(4); 
@@ -106,9 +117,7 @@ void main() {
         
         //Timer interruption
         if(TMR0IF){
-            ShowMessage("INT", 6);
             __delay_ms(150);
-            ShowMessage("@", 6); 
             CheckBattery();
             if(!flightMode) CheckNetwork(); 
             Sleep(); 
@@ -123,7 +132,6 @@ void main() {
         
         //Accelerometer interruption
         if(IOCCF1){
-            ShowMessage("ACC@@", 6);
             __delay_ms(300);
             ResetScreenTimer();
             if(alarmOn) RaiseAlarm();
@@ -145,7 +153,7 @@ void main() {
 }
 //--------------MAIN METHODS LIBRARY------------------ 
 void ResetScreenTimer(){
-    screenTimer=60;
+    screenTimer=70;
 }
 
 void Sleep(){
