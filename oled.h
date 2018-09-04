@@ -9,8 +9,6 @@
 #define OLED_CS             PORTAbits.RA4
 #define OLED_DC             PORTCbits.RC5
 #define OLED_RES            PORTCbits.RC4
-#define SW1                 PORTBbits.RB7
-#define SW2                 PORTBbits.RB6
 
 typedef char                     schar;
 typedef unsigned char            uchar;
@@ -18,7 +16,6 @@ typedef const char               cschar;
 typedef const unsigned char      cuchar;
 typedef int                      sint;
 typedef unsigned int             uint;
-//bool oledOn;
 
 cuchar *font, *font2;
 uchar width, height, min, max;
@@ -109,7 +106,6 @@ void Oled_Init(void){
     Oled_WriteCmd(0x8D); Oled_WriteCmd(0x14); // Charge Pump Setting
     Oled_WriteCmd(0xAF);                     // Set Display ON
     Oled_FillScreen(0x00);                  // Clear screen
-    //oledOn = true;
 }
 
 void ScreenOn(){
@@ -119,7 +115,6 @@ void ScreenOn(){
 void ScreenOff(){
     Oled_WriteCmd(0xAE); 
 }
-
 
 //------------------------------------------------------------------------------
 // Sets font that will be used.

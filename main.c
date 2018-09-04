@@ -78,10 +78,42 @@ void main() {
     //---------GPS-------------
 //    SWDTEN = 0;
 //    ShowMessage("GPS@TEST", 3);
-//    //GIE = 1;
-//    __delay_ms(100); //time to stabilized interruption
+//    char res[35];
+//    char * token;
 //    while(1){
 //        
+//        if(SW1==0){
+//            SendUartCmd("AT+CGATT=1\n");
+//            __delay_ms(100);
+//            SendUartCmd("AT+SAPBR=3,1,\"CONTYPE\",\"GPRS\"\n");
+//            __delay_ms(100);
+//            SendUartCmd("AT+SAPBR=3,1,\"APN\",\"0V0E TMGS\"\n");
+//            __delay_ms(100);
+//            SendUartCmd("AT+SAPBR=1,1\n");
+//            __delay_sec(1);
+//            SendUartCmd("AT+CIPGSMLOC=1,1\n");
+//            __delay_ms(300);
+//            //UART_Read_Text(res, sizeof(res)/sizeof(char));
+//            //token = strtok (res," ,");//READ 1
+//            //token = strtok (NULL,",");
+//            //token = strtok (NULL,",");
+//            //SendUartCmd(token);
+//            
+//            SendUartCmd("AT+HTTPINIT\n");
+//            __delay_ms(100);         
+//            SendUartCmd("AT+HTTPPARA=\"CID\",1\n");
+//            __delay_ms(100);          
+//            SendUartCmd("AT+HTTPPARA=\"URL\",\"http://data.sparkfun.com/input/GEG6yrLAW1uGXjr1nQpd?private_key=NnlbNYx1g6hWwN6XvkKr&latitude=111&longitude=222\"\n");
+//            __delay_ms(100);           
+//            
+//            
+//            SendUartCmd("AT+HTTPACTION=0\n");
+//            __delay_sec(2);
+//            
+//            SendUartCmd("AT+HTTPTERM\n");
+//            __delay_ms(100);
+//            SendUartCmd("AT+SAPBR=0,1\n");
+//        }
 //    }
   
     //------Welcome message------------  

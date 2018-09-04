@@ -69,6 +69,7 @@
 #define RC522_CS PORTCbits.RC7
 
 bool CheckRFID();
+bool rfidOff =false;
 
 static void MFRC522_Wr( char addr, char value )
 {
@@ -76,7 +77,6 @@ static void MFRC522_Wr( char addr, char value )
     SPI_Write(( addr << 1 ) & 0x7E);
     SPI_Write(value);
     RC522_CS = UP;
-    //__delay_ms(100);
 }
 static char MFRC522_Rd( char addr )
 {
@@ -85,7 +85,6 @@ static char MFRC522_Rd( char addr )
     CKP = 0;
     char val = SPI_Write(0x00);
     RC522_CS = UP;
-    //__delay_ms(100);
     return val;
 }
 
@@ -102,15 +101,15 @@ void MFRC522_Reset(){
 }
 
 void RfidOn(){
-    //MFRC522_Clear_Bit(COMMANDREG, 0x20); //Switch on analog receiver 
-    //MFRC522_Clear_Bit(COMMANDREG, 0x10); //Wake up from sleep mode
-     MFRC522_Set_Bit( TXCONTROLREG, 0x03 ); //Antenna On
+    MFRC522_Set_Bit( TXCONTROLREG, 0x03 ); //Antenna On
+    rfidOff = false;
 }
 
 void RfidOff(){
-    MFRC522_Clear_Bit( TXCONTROLREG, 0x03 ); //Antenna Off
-    //MFRC522_Set_Bit(COMMANDREG, 0x20);//analog part of the receiver is switched off 3mA
-    //MFRC522_Set_Bit(COMMANDREG, 0x10);//Sleep mode
+    MFRC522_Clear_Bit( TXCONTROLREG, 0x03 );
+    MFRC522_Set_Bit(COMMANDREG, 0x10);
+    MFRC522_Set_Bit(COMMANDREG, 0x08);
+    rfidOff = true;
 }
 
 void RFID_Init(){
@@ -128,7 +127,6 @@ void RFID_Init(){
     //MFRC522_Wr( RXSELREG, 0x86 );      //RxWait = RxSelReg[5..0]
     //MFRC522_Wr( RFCFGREG, 0x7F );     //RxGain = 48dB
      MFRC522_Set_Bit( TXCONTROLREG, 0x03 );  //Antenna on
-     sleepMode = false;
 }
 
 char MFRC522_ToCard( char command, char *sendData, char sendLen, char *backData, unsigned *backLen )
@@ -429,16 +427,13 @@ char MFRC522_AntiColl( char *serNum )
 //0x0002 = Mifare_One (S70)
 //0x0008 = Mifare_Pro (X)
 //0x0344 = Mifare_DESFire
-char MFRC522_isCard( char *TagType )
-{
-    if (MFRC522_Request( PICC_REQIDL, TagType ) == MI_OK)
-        {
+char MFRC522_isCard( char *TagType ){
+    if (MFRC522_Request( PICC_REQIDL, TagType ) == MI_OK){
         return 1;
-        }
-    else
-        {
+    }
+    else{
         return 0;
-        }
+    }
 }
 
 char MFRC522_ReadCardSerial( char *str )
@@ -458,19 +453,21 @@ char UID[6];
 unsigned TagType;
 
 bool RFID_Ok(){
+    if (rfidOff) return false;
+    
     if(MFRC522_isCard(&TagType)){ 
         if( MFRC522_ReadCardSerial(&UID)){   
-            char buffer [1];
-            char badgeSerialNumber [11] = "";
-            
+            char buffer[1];
+            char badgeSerialNumber[11] = "";          
             for(int i=0; i < 5; i++){
                 sprintf(buffer,"%X",*(UID+i));
                 strcat(badgeSerialNumber,buffer);            
            }
-            //SendUartCmd(badgeSerialNumber); debug
-            Bip(1,100);
             if(strcmp(badgeSerialNumber, "A0BA7D593E") == 0)    
             {
+                ShowMessage("TAG@OK", 6);
+                __delay_sec(2);
+                ShowMessage("@@@@@@", 6);
                 return true;
             }
             else{
@@ -484,7 +481,5 @@ bool RFID_Ok(){
     }
     return false;
 }
-
-
 #endif	/* RC522_H */
 

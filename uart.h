@@ -9,11 +9,11 @@ char UART_Init(void)
     RC1STA = 0x90;
     // CSRC slave_mode; TRMT TSR_empty; TXEN enabled; BRGH hi_speed; SYNC asynchronous; SENDB sync_break_complete; TX9D 0x0; TX9 8-bit;
     TX1STA = 0x26;
-
+    
     //Rev001
     SP1BRGL = 0xCF;
     SP1BRGH = 0x00;
-    
+  
     //Rev002
     //SP1BRGL = 0xA0;
     //SP1BRGH = 0x01;

@@ -10,8 +10,7 @@
 #define DOWN 0
 #define UP 1
 #define ADXL_CS PORTAbits.RA2
-//#define ADXL_INT2 PORTCbits.RC0   rev001
-#define ADXL_INT2 PORTCbits.RC1    //rev002
+#define ADXL_INT2 PORTCbits.RC1
 
 //Read SPI bus
 char ACC_ReadReg( char reg )
@@ -37,7 +36,7 @@ void ACC_WriteReg( char reg, char cmd )
     __delay_ms(100);
 }
 
-void ADLX_Init()
+void ACC_Init()
 {
     ADXL_CS=UP;
     char reg;
@@ -70,14 +69,5 @@ void ADLX_Init()
     ACC_WriteReg(0x2d,0x0A);
 }
 
-//void StartADLX(){
-//     // set adxl362 to measurement mode, ultralow noise and Start measurement p34
-//    //ACC_WriteReg(ADXL_POWER_CTL,0x0A);
-//    ACC_WriteReg(0x2d,0x0A);
-//}
-//
-//void StandbyADLX(){
-//    ACC_WriteReg(0x2d,0x8);
-//}
 #endif	/* ADXL_H */
 

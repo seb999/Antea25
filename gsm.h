@@ -1,10 +1,11 @@
 #ifndef GSM_H
 #define	GSM_H
-#include "oled.h"
 
-char result3[67]; 
-int simOk;
-
+//AT+COPS? Check network
+//AT+CSQ   Get signal level
+//AT+CBC   Check battery
+//AT+IPR?  Get baud rate
+//AT+IPR=0 Put in Auto baud 
 void ShowBattIcon(cschar*);
 void ShowMessage(cschar*, uchar);
 void ShowNumber(cschar *, uchar, uchar);
@@ -17,27 +18,13 @@ void GsmOff();
 void GsmOn();
 void ShowBattLoad(cschar *);
 
-bool CheckSimCard(){
-    char result[11];
-    char * simStatus;
-    SendUartCmd("AT+CSMINS\n");
-    UART_Read_Text(result, sizeof(result)/sizeof(char));
-    strtok (result," ,");
-    simStatus = strtok (NULL,",");
-    if(simStatus=="1")
-        return true;
-    else
-        return false;
-}
-
 void SimCard_Init(){
-    char result[15];
+    char res[15];
     SendUartCmd("AT+CMGF=1\n");//Put in text mode
-    UART_Read_Text(result, sizeof(result)/sizeof(char)); ///Is it necessary ??
+    UART_Read_Text(res, sizeof(res)/sizeof(char)); ///Is it necessary ??
 }
 
 void GsmOff(){
-    char res[11];
     flightMode = true;
     ShowMessage("@@@@", 0);
     SendUartCmd("AT+CFUN=4\n");
@@ -54,55 +41,68 @@ void GsmOn(){
     flightMode = false;
     ShowMessage("@@@@", 0);
 }
-    
+
 void CheckBattery(){
-   char res[31];
-   int battLoadInt;
-   char * battLoad;
-   
+    char res[31];
+    int batt;
+    char * token;
     SendUartCmd("AT+CBC\n");
     UART_Read_Text(res, sizeof(res)/sizeof(char));
-    strtok (res," ,");
-    strtok (NULL,",");
-    battLoad = strtok (NULL,","); 
-    battLoadInt = atoi(battLoad);
+    
+    token = strtok (res," ,");//READ 1
+    if(token == NULL ) return;
+    token = strtok (NULL,","); //READ 2
+    if(token == NULL ) return;   
+    token = strtok (NULL,","); //READ 3
+    if(token == NULL ) return;
+     
     ShowMessage("@@@@@@@@", 6);
-    ShowBattLoad(battLoad);
-    if(battLoadInt>15 && battLoadInt<=25) ShowBattIcon("1"); 
-    if(battLoadInt>25 && battLoadInt<=50) ShowBattIcon("2");
-    if(battLoadInt>50 && battLoadInt<=75) ShowBattIcon("3"); 
-    if(battLoadInt>75 && battLoadInt<=100) ShowBattIcon("4"); 
+    ShowBattLoad(token);
+    batt = atoi(token);
+    if(batt>15 && batt<=25) ShowBattIcon("1"); 
+    if(batt>25 && batt<=50) ShowBattIcon("2");
+    if(batt>50 && batt<=75) ShowBattIcon("3"); 
+    if(batt>75 && batt<=100) ShowBattIcon("4"); 
 }
 
 bool CheckNetwork(){
     char res[20];
-    char * netSignal;
-    int netSignalInt;
+    char * token;
+    int netSignal;
     SendUartCmd("AT+CSQ\n");
     UART_Read_Text(res, sizeof(res)/sizeof(char));
-    strtok (res," ,");
-    netSignal = strtok (NULL,",");
-    netSignalInt = atoi(netSignal);
-    if(netSignalInt==0 || netSignalInt==99) {
+    
+    token = strtok (res," ,");
+    if(token == NULL ){ 
         ShowReceptionIcon("22222");
-        return false;
+        return false; 
     }
-    else
-    {
-        if(netSignalInt==1) ShowReceptionIcon("12222");
-        if(netSignalInt>1 && netSignalInt<=3) ShowReceptionIcon("11222");
-        if(netSignalInt>3 && netSignalInt<=6) ShowReceptionIcon("11122");
-        if(netSignalInt>6 && netSignalInt<=20) ShowReceptionIcon("11112");
-        if(netSignalInt>20 && netSignalInt<=31) ShowReceptionIcon("11111");
-        return true;
+    token = strtok (NULL,",");
+    if(token == NULL ) { 
+        ShowReceptionIcon("22222");
+        return false; 
     }
+    
+    netSignal = atoi(token);
+    
+    if(netSignal==0 || netSignal==99){ 
+        ShowReceptionIcon("22222");
+        return false; 
+    }
+    if(netSignal==1) ShowReceptionIcon("12222");
+    if(netSignal>1 && netSignal<=5) ShowReceptionIcon("11222");
+    if(netSignal>5 && netSignal<=10) ShowReceptionIcon("11122");
+    if(netSignal>10 && netSignal<=17) ShowReceptionIcon("11112");
+    if(netSignal>17 && netSignal<=31) ShowReceptionIcon("11111");
+    return true;
 }
 
 char * ReadLastSMS(){
+    char res[67]; 
     char * phoneNbr;
     SendUartCmd("AT+CMGL=\"REC UNREAD\",0\n");
-    UART_Read_Text(result3, sizeof(result3)/sizeof(char));  
-    strtok (result3," ,");
+    UART_Read_Text(res, sizeof(res)/sizeof(char));  
+    strtok (res," ,");
     strtok (NULL,",");
     strtok (NULL,",");
     strtok (NULL,",");
@@ -144,20 +144,23 @@ char * ReadPhoneNumber(){
     if(strlen(phoneNumber)==0){
              ShowMessage("SET@PHONE", 2);
              ShowMessage("NUMBER", 5);
+             __delay_sec(2);
             return "";}
     return phoneNumber;
 }
 
 void SendSms(){
+    char result[10];
     ShowMessage("SMS@SENT", 3);
-//    char * phoneNumber = ReadPhoneNumber();
-//    char str1[20];
-//    strcpy(str1,"AT+CMGS=");
-//    strcat(str1,phoneNumber);
-//    strcat(str1, "\n");
-//    SendUartCmd(str1);
-//    SendUartCmd("Your attention is required, something is happening!!");
-//    SendUartCmd("\032"); //ctrl + z
+    char * phoneNumber = ReadPhoneNumber();
+    char str1[20];
+    strcpy(str1,"AT+CMGS=");
+    strcat(str1,phoneNumber);
+    strcat(str1, "\n");
+    SendUartCmd(str1);
+    SendUartCmd("Your attention is required, something is happening!!");
+    SendUartCmd("\032"); //ctrl + z
+    UART_Read_Text(result, sizeof(result)/sizeof(char)); 
 }
 
 //----------------DISPLAY ON OLED---------------------------
